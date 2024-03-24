@@ -4,14 +4,14 @@ services:
   sugar-backend:
     build: ./
     command: ./sugar-backend
-    ports: 
+    ports:
       - "8080:8080"
     depends_on:
-      - sugar_db
+      - sugar-db
     environment:
       - POSTGRES_PASSWORD=postgres
 
-  sugar_bd:
+  sugar-db:
     restart: unless-stopped
     image: postgres:latest
     ports:
@@ -19,7 +19,6 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=sugar_bd
+      - POSTGRES_DB=sugar-db
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      

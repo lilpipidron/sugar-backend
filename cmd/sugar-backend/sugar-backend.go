@@ -3,9 +3,6 @@ package main
 import (
 	"log/slog"
 	"os"
-
-	"github.com/lilpipidron/sugar-backend/GolandProjects/sugar-backend/internal/config"
-	"github.com/lilpipidron/sugar-backend/go/pkg/mod/github.com/labstack/gommon@v0.4.0/log"
 )
 
 const (
@@ -17,11 +14,11 @@ const (
 func main() {
 	cfg := config.MustLoad()
 
-  log := setupLogger(cfg.Env)
-log = log.With(slog.String("env", cfg.Env))
+	log := setupLogger(cfg.Env)
+	log = log.With(slog.String("env", cfg.Env))
 
-  log.Info("initializing server", slog.String("address", cfg.Address))
-log.Debug("logger debug mode enabled")
+	log.Info("initializing server", slog.String("address", cfg.Address))
+	log.Debug("logger debug mode enabled")
 }
 
 func setupLogger(env string) *slog.Logger {

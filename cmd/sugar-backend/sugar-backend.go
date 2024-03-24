@@ -1,8 +1,12 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
+	"log"
 	"log/slog"
 	"os"
+
+	"github.com/lilpipidron/sugar-backend/internal/config"
 )
 
 const (
@@ -12,6 +16,11 @@ const (
 )
 
 func main() {
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	cfg := config.MustLoad()
 
 	log := setupLogger(cfg.Env)
@@ -23,6 +32,7 @@ func main() {
 
 func setupLogger(env string) *slog.Logger {
 	var log *slog.Logger
+
 	switch env {
 	case envLocal:
 		log = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
@@ -31,5 +41,6 @@ func setupLogger(env string) *slog.Logger {
 	case envProd:
 		log = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
 	}
+
 	return log
 }

@@ -1,11 +1,10 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
-	"log"
-	"log/slog"
 	"os"
 
+	"github.com/charmbracelet/log"
+	"github.com/joho/godotenv"
 	"github.com/lilpipidron/sugar-backend/internal/config"
 )
 
@@ -15,32 +14,32 @@ const (
 	envProd  = "prod"
 )
 
+func setupLogger(env string) *log.Logger {
+	var logger *log.Logger
+
+	switch env {
+	case envLocal:
+		logger = log.NewWithOptions(os.Stdout, log.Options{Level: log.DebugLevel})
+	case envDev:
+		logger = log.NewWithOptions(os.Stdout, log.Options{Level: log.DebugLevel})
+	case envProd:
+		logger = log.NewWithOptions(os.Stdout, log.Options{Level: log.DebugLevel})
+	}
+
+	return logger
+}
+
 func main() {
-	err := godotenv.Load("../../.env")
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("failed to load .env file", "err", err)
 	}
 
 	cfg := config.MustLoad()
 
 	log := setupLogger(cfg.Env)
-	log = log.With(slog.String("env", cfg.Env))
+	log = log.With("env", cfg.Env)
 
-	log.Info("initializing server", slog.String("address", cfg.Address))
+	log.Info("initializing server", "address", cfg.Address)
 	log.Debug("logger debug mode enabled")
-}
-
-func setupLogger(env string) *slog.Logger {
-	var log *slog.Logger
-
-	switch env {
-	case envLocal:
-		log = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
-	case envDev:
-		log = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
-	case envProd:
-		log = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
-	}
-
-	return log
 }

@@ -1,9 +1,9 @@
 package config
 
 import (
-	"log"
 	"os"
 
+	"github.com/charmbracelet/log"
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
@@ -28,18 +28,18 @@ type Database struct {
 func MustLoad() *Config {
 	configPath := os.Getenv("CONFIG_PATH")
 	if configPath == "" {
-		log.Fatal("CONFIG_PATH environment variable is not set")
+		log.Fatal("environment variable CONFIG_PATH is not set")
 	}
 
 	if _, err := os.Stat(configPath); err != nil {
-		log.Fatalf("error opening config file: %s", err)
+		log.Fatalf("failed to open config file", "err", err)
 	}
 
 	var cfg Config
 
 	err := cleanenv.ReadConfig(configPath, &cfg)
 	if err != nil {
-		log.Fatalf("error reading config file: %s", err)
+		log.Fatal("failed to read config file", "err", err)
 	}
 
 	return &cfg

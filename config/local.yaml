@@ -1,11 +1,6 @@
 env: "local"
 
+storage_path: "./storage/storage.db"
+
 http_server:
   address: "localhost:8080"
-
-database:
-  host: "sugar_db"
-  port: 5432
-  user: "postgres"
-  password: "postgres"
-  dbname: "sugar_db"

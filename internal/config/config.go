@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/charmbracelet/log"
 	"github.com/ilyakaznacheev/cleanenv"
@@ -10,7 +11,7 @@ import (
 type Config struct {
 	Env        string `yaml:"env" env-default:"development"`
 	HTTPServer `yaml:"http_server"`
-	Database   `yaml:"database"`
+	Database
 }
 
 type HTTPServer struct {
@@ -18,11 +19,28 @@ type HTTPServer struct {
 }
 
 type Database struct {
-	Host     string `yaml:"host" env-default:"localhost"`
-	Port     int    `yaml:"port" env-default:"5432"`
-	User     string `yaml:"user" env-default:"postgres"`
-	Password string `yaml:"password" env-default:"postgres"`
-	DBName   string `yaml:"dbname" env-default:"postgres"`
+	User     string
+	Password string
+	DBName   string
+  Host     string
+  Port     int
+}
+
+func retrieveDatabaseConfig(config *Config) {
+	var dbData Database
+
+	dbData.User = os.Getenv("DB_USER")
+	dbData.Password = os.Getenv("DB_PASSWORD")
+	dbData.DBName = os.Getenv("DB_NAME")
+  dbData.Host = os.Getenv("DB_HOST")
+
+  port, err := strconv.Atoi(os.Getenv("DB_PORT"))
+  if err != nil {
+    log.Fatal("failed to parse database port", "err", err)
+  }
+  dbData.Port = port
+
+	config.Database = dbData
 }
 
 func MustLoad() *Config {
@@ -32,15 +50,17 @@ func MustLoad() *Config {
 	}
 
 	if _, err := os.Stat(configPath); err != nil {
-		log.Fatalf("failed to open config file", "err", err)
+		log.Fatal("failed to open config file", "err", err)
 	}
 
-	var cfg Config
+	var config Config
 
-	err := cleanenv.ReadConfig(configPath, &cfg)
+	err := cleanenv.ReadConfig(configPath, &config)
 	if err != nil {
 		log.Fatal("failed to read config file", "err", err)
 	}
 
-	return &cfg
+	retrieveDatabaseConfig(&config)
+
+	return &config
 }

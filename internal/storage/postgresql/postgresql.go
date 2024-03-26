@@ -13,24 +13,26 @@ type Storage struct {
 }
 
 func New(psqlInfo, dbname string) (*Storage, error) {
-	db, err := sql.Open("postgres", psqlInfo)
+  const errFunc = "storage.postgresql.NewStorage"
+
+  db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
-		return nil, err
+		return nil,  fmt.Errorf("%s: %w", errFunc, err)
 	}
 
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
-		return nil, err
+		return nil,  fmt.Errorf("%s: %w", errFunc, err)
 	}
 
 	migration, err := migrate.NewWithDatabaseInstance("file:/migration", dbname, driver)
 	if err != nil {
-		return nil, err
+		return nil,  fmt.Errorf("%s: %w", errFunc, err)
 	}
 
 	if err := migration.Up(); err != nil {
 		if !errors.Is(err, migrate.ErrNoChange) {
-			return nil, err
+      return nil,  fmt.Errorf("%s: %w", errFunc, err)
 		}
 	}
 

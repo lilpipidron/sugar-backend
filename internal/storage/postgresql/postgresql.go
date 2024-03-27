@@ -39,5 +39,3 @@ func New(psqlInfo, dbname string) (*Storage, error) {
 
 	return &Storage{db: db}, nil
 }
-
-//TODO querys

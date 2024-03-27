@@ -1,24 +1,24 @@
- create type note_types as enum
-        (
-        	'regular'
-        	'sugar'
-        );
+create type note_types as enum
+(
+        'regular'
+        'sugar'
+);
 
-        create type genders as enum
-        (
-        	'male'
-        	'female'
-        );
+create type genders as enum
+(
+        'male'
+        'female'
+);
 
-        create table users
-        (
+create table users
+(
         user_id bigint primary key generated always as identity,
         login text not null,
         password text not null
-        );
+);
 
-        create table user_info
-        (
+create table user_info
+(
         user_id bigint not null references users(user_id),
         name text not null,
         birthday date not null,
@@ -27,27 +27,27 @@
         height bigint not null,
         carbohydrate_ratio real not null,
         bread_unit bigint not null
-        );
+);
 
-        create table product
-        (
+create table product
+(
         product_id bigint primary key generated always as identity,
         product_name text not null,
         carbs bigint not null
-        );
+);
 
-        create table note_header
-        (
+create table note_header
+(
         note_id bigint primary key generated always as identity,
         user_id bigint not null references users(user_id),
         note_type note_types not null,
         create_date date not null,
         sugar_level real
-        );
+);
 
-        create table note_detail
-        (
+create table note_detail
+(
         note_id bigint not null references note_header(note_id),
         product_id bigint not null references product(product_id),
         product_amount bigint not null
-        );
+);

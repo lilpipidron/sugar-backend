@@ -1,7 +1,9 @@
 package storage
 
-var(
-  ErrUserNotFound    = errors.New("user not found")
+import "errors"
+
+var (
+	ErrUserNotFound    = errors.New("user not found")
 	ErrNoteNotFound    = errors.New("note not found")
 	ErrProductNotFound = errors.New("product not found")
 

@@ -24,7 +24,6 @@ create table user_info
     birthday           date    not null,
     gender             genders not null,
     weight             bigint  not null,
-    height             bigint  not null,
     carbohydrate_ratio real    not null,
     bread_unit         bigint  not null
 );

@@ -21,6 +21,7 @@ type Repository interface {
 }
 
 type repository struct {
+	DB *sql.DB
 }
 
 func NewUserRepository(db *sql.DB) *repository {

@@ -28,7 +28,7 @@ create table user_info
     bread_unit         bigint  not null
 );
 
-create table product
+create table products
 (
     product_id   bigint primary key generated always as identity,
     product_name text   not null,

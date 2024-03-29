@@ -3,6 +3,7 @@ package user
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/lilpipidron/sugar-backend/internal/models/users"
@@ -54,6 +55,13 @@ func (db *repository) FindUser(login, password string) (*users.User, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%s: failed find user: %w", op, err)
 	}
+
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			log.Println(fmt.Errorf("%s: failed close user's row: %w", op, err))
+		}
+	}(row)
 
 	u := &users.User{}
 	err = row.Scan(&u.UserID, &u.Login, &u.UserInfo.Name, &u.UserInfo.Birhday, &u.UserInfo.Gender, &u.UserInfo.Weight, &u.UserInfo.CarbohydrateRatio, &u.UserInfo.BreadUnit)

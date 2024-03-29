@@ -12,7 +12,7 @@ import (
 type Repository interface {
 	AddNewUser(user users.User, password string) error
 	FindUser(login, password string) (*users.User, error)
-	DeleteUserByID(userID int64) error
+	DeleteUser(userID int64) error
 	ChangeName(userID int64, newName string) error
 	ChangeBirthday(userID int64, newBirthday time.Time) error
 	ChangeGender(userID int64, newGender users.Gender) error
@@ -72,8 +72,8 @@ func (db *repository) FindUser(login, password string) (*users.User, error) {
 	return u, nil
 }
 
-func (db *repository) DeleteUserByID(userID int64) error {
-	const op = "storage.user.DeleteUserByID"
+func (db *repository) DeleteUser(userID int64) error {
+	const op = "storage.user.DeleteUser"
 
 	query := "DELETE FROM users WHERE user_id = $1"
 	_, err := db.DB.Exec(query, userID)

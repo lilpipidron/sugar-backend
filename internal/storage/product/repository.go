@@ -10,7 +10,7 @@ import (
 
 type Repository interface {
 	AddProduct(product products.Product) error
-	GetProductsContainsValue(value string) ([]*products.Product, error)
+	GetProductsWithValueInName(value string) ([]*products.Product, error)
 	GetCarbsAmount(name string) (int, error)
 }
 
@@ -34,8 +34,8 @@ func (db *repository) AddProduct(product products.Product) error {
 	return nil
 }
 
-func (db *repository) GetProductsContainsValue(value string) ([]*products.Product, error) {
-	const op = "storage.Product.GetProductByName"
+func (db *repository) GetProductsWithValueInName(value string) ([]*products.Product, error) {
+	const op = "storage.Product.GetProductsWithValueInName"
 
 	query := "SELECT * FROM products WHERE product_name LIKE $1"
 	rows, err := db.DB.Query(query, value)

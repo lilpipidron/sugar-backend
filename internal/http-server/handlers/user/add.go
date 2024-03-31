@@ -21,8 +21,8 @@ type Request struct {
 	Birthday          time.Time    `json:"birthday"`
 	Gender            users.Gender `json:"gender"`
 	Weight            int          `json:"weight"`
-	CarbohydrateRatio int          `json:carbohydrate-ratio"`
-	BreadUnit         int          `json:"bread-unit`
+	CarbohydrateRatio int          `json:"carbohydrate-ratio"`
+	BreadUnit         int          `json:"bread-unit"`
 }
 
 type Response struct {
@@ -40,9 +40,9 @@ func New(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 			"request_id: "+middleware.GetReqID(r.Context()),
 		)
 
-		var req Request
+		var request Request
 
-		err := render.DecodeJSON(r.Body, &req)
+		err := render.DecodeJSON(r.Body, &request)
 		if errors.Is(err, io.EOF) {
 			log.Errorf("request body is empty")
 
@@ -59,9 +59,9 @@ func New(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 			return
 		}
 
-		log.Info("request body decoded", req)
+		log.Info("decoded request body", request)
 
-		if err != validator.New().Struct(req); err != nil {
+		if err = validator.New().Struct(request); err != nil {
 			validateErr := err.(validator.ValidationErrors)
 
 			log.Error("invalid request", err)
@@ -71,31 +71,31 @@ func New(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 			return
 		}
 
-		usrInfo := users.UserInfo{
-			req.Name,
-			req.Birthday,
-			req.Gender,
-			req.Weight,
-			req.CarbohydrateRatio,
-			req.BreadUnit,
+		userInfo := users.UserInfo{
+			Name:              request.Name,
+			Birthday:          request.Birthday,
+			Gender:            request.Gender,
+			Weight:            request.Weight,
+			CarbohydrateRatio: request.CarbohydrateRatio,
+			BreadUnit:         request.BreadUnit,
 		}
 
-		usr := users.User{
-			-1,
-			req.Login,
-			usrInfo,
+		user := users.User{
+			UserID:   -1,
+			Login:    request.Login,
+			UserInfo: userInfo,
 		}
 
-		err = userSaver.AddUser(usr, req.Password)
+		err = userSaver.AddUser(user, request.Password)
 		if err != nil {
 			log.Error(err)
 
-			render.JSON(w, r, resp.Error("failed add user"))
+			render.JSON(w, r, resp.Error("failed to add user"))
 
 			return
 		}
 
-		log.Info("user added")
+		log.Info("added user")
 
 		responseOK(w, r)
 	}

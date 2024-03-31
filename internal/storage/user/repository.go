@@ -39,7 +39,7 @@ func (db *repository) AddNewUser(user users.User, password string) error {
 	}
 
 	query = "INSERT INTO user_info (userID, name, birthday, gender, weight, carbohydrateRatio, breadUnit) VALUSE ($1, $2, $3, $4, $5, $6, $7)"
-	_, err = db.DB.Exec(query, id, user.UserInfo.Name, user.UserInfo.Birhday, user.UserInfo.Gender, user.UserInfo.Weight, user.UserInfo.CarbohydrateRatio, user.UserInfo.BreadUnit)
+	_, err = db.DB.Exec(query, id, user.UserInfo.Name, user.UserInfo.Birthday, user.UserInfo.Gender, user.UserInfo.Weight, user.UserInfo.CarbohydrateRatio, user.UserInfo.BreadUnit)
 	if err != nil {
 		return fmt.Errorf("%s: failed add user info: %w", op, err)
 	}
@@ -64,7 +64,7 @@ func (db *repository) FindUser(login, password string) (*users.User, error) {
 	}(row)
 
 	u := &users.User{}
-	err = row.Scan(&u.UserID, &u.Login, &u.UserInfo.Name, &u.UserInfo.Birhday, &u.UserInfo.Gender, &u.UserInfo.Weight, &u.UserInfo.CarbohydrateRatio, &u.UserInfo.BreadUnit)
+	err = row.Scan(&u.UserID, &u.Login, &u.UserInfo.Name, &u.UserInfo.Birthday, &u.UserInfo.Gender, &u.UserInfo.Weight, &u.UserInfo.CarbohydrateRatio, &u.UserInfo.BreadUnit)
 	if err != nil {
 		return nil, fmt.Errorf("%s: failed scan row: %w", op, err)
 	}

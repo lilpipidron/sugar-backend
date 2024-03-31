@@ -32,7 +32,7 @@ func New(logger *log.Logger) func(next http.Handler) http.Handler {
 
 			defer func() {
 				entry.Info("request completed",
-					fmt.Sprintf("status %w", ww.Status()),
+					fmt.Sprintf("status %d", ww.Status()),
 					fmt.Sprintf("bytes %d", ww.BytesWritten()),
 					fmt.Sprintf(`duration %s`, time.Since(t1).String()),
 				)

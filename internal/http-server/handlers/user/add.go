@@ -6,11 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-playground/validator"
-
 	"github.com/charmbracelet/log"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
+	"github.com/go-playground/validator/v10"
 	resp "github.com/lilpipidron/sugar-backend/internal/lib/api/response"
 	"github.com/lilpipidron/sugar-backend/internal/models/users"
 )
@@ -71,8 +70,23 @@ func New(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 
 			return
 		}
-		// FIX
-		err = userSaver.AddUser(req, req.Password)
+
+		usrInfo := users.UserInfo{
+			req.Name,
+			req.Birthday,
+			req.Gender,
+			req.Weight,
+			req.CarbohydrateRatio,
+			req.BreadUnit,
+		}
+
+		usr := users.User{
+			-1,
+			req.Login,
+			usrInfo,
+		}
+
+		err = userSaver.AddUser(usr, req.Password)
 		if err != nil {
 			log.Error(err)
 

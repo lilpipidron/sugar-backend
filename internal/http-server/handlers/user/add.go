@@ -1,67 +1,32 @@
 package user
 
 import (
-	"errors"
-	"io"
 	"net/http"
-	"time"
 
 	"github.com/charmbracelet/log"
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator/v10"
+
+	"github.com/lilpipidron/sugar-backend/internal/http-server/request"
+	"github.com/lilpipidron/sugar-backend/internal/http-server/response"
 	resp "github.com/lilpipidron/sugar-backend/internal/lib/api/response"
 	"github.com/lilpipidron/sugar-backend/internal/models/users"
 )
 
-type Request struct {
-	Login             string       `json:"login"`
-	Password          string       `json:"password"`
-	Name              string       `json:"name"`
-	Birthday          time.Time    `json:"birthday"`
-	Gender            users.Gender `json:"gender"`
-	Weight            int          `json:"weight"`
-	CarbohydrateRatio int          `json:"carbohydrate-ratio"`
-	BreadUnit         int          `json:"bread-unit"`
-}
-
-type Response struct {
-	resp.Response
-}
 type UserSaver interface {
 	AddUser(user users.User, password string) error
 }
 
 func New(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.user.add.New"
-		logger = log.With(
-			"op: "+op,
-			"request_id: "+middleware.GetReqID(r.Context()),
-		)
+		var userAdd request.AddUser
+		var req request.Request = &userAdd
+		request.Decode(w, r, &req)
+		userAdd = (req).(request.AddUser)
 
-		var request Request
+		log.Info("decoded request body", userAdd)
 
-		err := render.DecodeJSON(r.Body, &request)
-		if errors.Is(err, io.EOF) {
-			log.Errorf("request body is empty")
-
-			render.JSON(w, r, resp.Error("empty request"))
-
-			return
-		}
-
-		if err != nil {
-			log.Error("failed to decode request body", err)
-
-			render.JSON(w, r, resp.Error("failed to decode request"))
-
-			return
-		}
-
-		log.Info("decoded request body", request)
-
-		if err = validator.New().Struct(request); err != nil {
+		if err := validator.New().Struct(userAdd); err != nil {
 			validateErr := err.(validator.ValidationErrors)
 
 			log.Error("invalid request", err)
@@ -72,21 +37,21 @@ func New(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 		}
 
 		userInfo := users.UserInfo{
-			Name:              request.Name,
-			Birthday:          request.Birthday,
-			Gender:            request.Gender,
-			Weight:            request.Weight,
-			CarbohydrateRatio: request.CarbohydrateRatio,
-			BreadUnit:         request.BreadUnit,
+			Name:              userAdd.Name,
+			Birthday:          userAdd.Birthday,
+			Gender:            userAdd.Gender,
+			Weight:            userAdd.Weight,
+			CarbohydrateRatio: userAdd.CarbohydrateRatio,
+			BreadUnit:         userAdd.BreadUnit,
 		}
 
 		user := users.User{
 			UserID:   -1,
-			Login:    request.Login,
+			Login:    userAdd.Login,
 			UserInfo: userInfo,
 		}
 
-		err = userSaver.AddUser(user, request.Password)
+		err := userSaver.AddUser(user, userAdd.Password)
 		if err != nil {
 			log.Error(err)
 
@@ -97,12 +62,6 @@ func New(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 
 		log.Info("added user")
 
-		responseOK(w, r)
+		response.ResponseOK(w, r)
 	}
-}
-
-func responseOK(w http.ResponseWriter, r *http.Request) {
-	render.JSON(w, r, Response{
-		Response: resp.OK(),
-	})
 }

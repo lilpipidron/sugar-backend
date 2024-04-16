@@ -7,8 +7,8 @@ import (
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator/v10"
 
-	"github.com/lilpipidron/sugar-backend/internal/http-server/request"
-	"github.com/lilpipidron/sugar-backend/internal/http-server/response"
+	"github.com/lilpipidron/sugar-backend/internal/httpserver/request"
+	"github.com/lilpipidron/sugar-backend/internal/httpserver/response"
 	resp "github.com/lilpipidron/sugar-backend/internal/lib/api/response"
 	"github.com/lilpipidron/sugar-backend/internal/models/users"
 )

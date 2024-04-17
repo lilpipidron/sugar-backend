@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/charmbracelet/log"
+	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator/v10"
 
@@ -17,8 +18,15 @@ type UserSaver interface {
 	AddUser(user users.User, password string) error
 }
 
-func New(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
+func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		const op = "handlers.user.add.NewUserAdd"
+
+		logger = log.With(
+			"op: "+op,
+			"request_id"+middleware.GetReqID(r.Context()),
+		)
+
 		var userAdd request.AddUser
 		var req request.Request = &userAdd
 		request.Decode(w, r, &req)

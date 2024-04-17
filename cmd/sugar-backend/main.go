@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	"github.com/lilpipidron/sugar-backend/internal/config"
-	"github.com/lilpipidron/sugar-backend/internal/http-server/middleware/logger"
+	"github.com/lilpipidron/sugar-backend/internal/httpserver/middleware/logger"
 )
 
 const (

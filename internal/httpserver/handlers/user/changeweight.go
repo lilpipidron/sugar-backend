@@ -9,32 +9,30 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/request"
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/response"
-	"github.com/lilpipidron/sugar-backend/internal/lib/api/response"
 	resp "github.com/lilpipidron/sugar-backend/internal/lib/api/response"
-	"github.com/lilpipidron/sugar-backend/internal/models/users"
 )
 
-type GenderChanger interface {
-	ChangeGender(id int64, newGender users.Gender) error
+type WeightChanger interface {
+	ChangeWeight(id int64, newWeight int) error
 }
 
-func NewGenderChanger(logger *log.Logger, genderChanger GenderChanger) http.HandlerFunc {
+func NewWeightChanger(logger *log.Logger, weightChanger WeightChanger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.user.changeGender.NewGenderChanger"
+		const op = "handlers.user.changeweight.NewWeightChanger"
 
 		logger = log.With(
 			"op: "+op,
 			"request_id"+middleware.GetReqID(r.Context()),
 		)
 
-		var changeGender request.ChangeGender
-		var req request.Request = &changeGender
+		var changeWeight request.ChangeWeight
+		var req request.Request = &changeWeight
 		request.Decode(w, r, &req)
-		changeGender = (req).(request.ChangeGender)
+		changeWeight = (req).(request.ChangeWeight)
 
-		log.Info("decoded request body", changeGender)
+		log.Info("decoded request body", changeWeight)
 
-		if err := validator.New().Struct(changeGender); err != nil {
+		if err := validator.New().Struct(changeWeight); err != nil {
 			validateErr := err.(validator.ValidationErrors)
 
 			log.Error("invalid request", err)
@@ -44,14 +42,16 @@ func NewGenderChanger(logger *log.Logger, genderChanger GenderChanger) http.Hand
 			return
 		}
 
-		err := genderChanger.ChangeGender(changeGender.ID, changeGender.NewGender)
+		err := weightChanger.ChangeWeight(changeWeight.ID, changeWeight.NewWeight)
 		if err != nil {
 			log.Error(err)
 
-			render.JSON(w, r, resp.Error("failed to change gender"))
+			render.JSON(w, r, resp.Error("failed to change weight"))
+
+			return
 		}
 
-		log.Info("changed gender")
+		log.Info("changed weight")
 
 		response.ResponseOK(w, r)
 	}

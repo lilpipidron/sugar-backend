@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/charmbracelet/log"
@@ -8,7 +9,10 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	"github.com/lilpipidron/sugar-backend/internal/config"
+	"github.com/lilpipidron/sugar-backend/internal/httpserver/handlers/user"
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/middleware/logger"
+	"github.com/lilpipidron/sugar-backend/internal/storage/postgresql"
+	ur "github.com/lilpipidron/sugar-backend/internal/storage/user"
 )
 
 const (
@@ -47,6 +51,16 @@ func main() {
 	log.Debug("logger debug mode enabled")
 
 	// TODO initialize db
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName)
+	storage, err := postgresql.New(psqlInfo, cfg.DBName)
+	if err != nil {
+		log.Error("failed to init storage", err)
+		os.Exit(1)
+	}
+
+	userRepository := ur.NewUserRepository(storage.DB)
 
 	router := chi.NewRouter()
 
@@ -55,4 +69,5 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 	router.Use(logger.New(log))
+	router.Get("/{login}/{password}", user.UserGetter(logger.New(log), userRepository))
 }

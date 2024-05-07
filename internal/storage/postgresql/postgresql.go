@@ -10,7 +10,7 @@ import (
 )
 
 type Storage struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func New(psqlInfo, dbname string) (*Storage, error) {
@@ -37,5 +37,5 @@ func New(psqlInfo, dbname string) (*Storage, error) {
 		}
 	}
 
-	return &Storage{db: db}, nil
+	return &Storage{DB: db}, nil
 }

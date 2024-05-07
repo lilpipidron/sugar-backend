@@ -14,7 +14,7 @@ import (
 )
 
 type UserGetter interface {
-	GetUser(login, password string) (users.User, error)
+	FindUser(login, password string) (*users.User, error)
 }
 
 func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
@@ -43,7 +43,7 @@ func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
 			return
 		}
 
-		user, err := userGetter.GetUser(getUser.Login, getUser.Password)
+		user, err := userGetter.FindUser(getUser.Login, getUser.Password)
 		if err != nil {
 			log.Error(err)
 

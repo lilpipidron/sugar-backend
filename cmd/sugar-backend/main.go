@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/charmbracelet/log"
@@ -50,7 +51,6 @@ func main() {
 	log.Info("initializing server", "address", cfg.Address)
 	log.Debug("logger debug mode enabled")
 
-	// TODO initialize db
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName)
@@ -69,5 +69,15 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 	router.Use(logger.New(log))
-	router.Get("/{login}/{password}", user.UserGetter(logger.New(log), userRepository))
+	router.Get("/{login}{password}", user.NewUserGetter(log, userRepository))
+
+	srv := &http.Server{
+		Addr:    cfg.Address,
+		Handler: router,
+	}
+
+	if err := srv.ListenAndServe(); err != nil {
+		log.Error("failed to start server")
+	}
+
 }

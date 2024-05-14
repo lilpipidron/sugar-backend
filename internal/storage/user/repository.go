@@ -33,12 +33,20 @@ func (db *repository) AddNewUser(user users.User, password string) error {
 	const op = "storage.user.AddNewUser"
 
 	query := "INSERT INTO users (login, password) VALUES ($1, $2) RETURNING user_id"
-	id, err := db.DB.Exec(query, user.Login, password)
+	_, err := db.DB.Exec(query, user.Login, password)
+
 	if err != nil {
 		return fmt.Errorf("%s: failed add new user: %w", op, err)
 	}
 
-	query = "INSERT INTO user_info (userID, name, birthday, gender, weight, carbohydrateRatio, breadUnit) VALUSE ($1, $2, $3, $4, $5, $6, $7)"
+	var id int64
+	err = db.DB.QueryRow("SELECT lastval()").Scan(&id)
+
+	if err != nil {
+		return fmt.Errorf("%s: failed get last user id: %w", op, err)
+	}
+
+	query = "INSERT INTO user_info (user_id, name, birthday, gender, weight, carbohydrate_ratio, bread_unit) VALUES ($1, $2, $3, $4, $5, $6, $7)"
 	_, err = db.DB.Exec(query, id, user.UserInfo.Name, user.UserInfo.Birthday, user.UserInfo.Gender, user.UserInfo.Weight, user.UserInfo.CarbohydrateRatio, user.UserInfo.BreadUnit)
 	if err != nil {
 		return fmt.Errorf("%s: failed add user info: %w", op, err)

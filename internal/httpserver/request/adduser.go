@@ -1,6 +1,7 @@
 package request
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/lilpipidron/sugar-backend/internal/models/users"
@@ -15,4 +16,20 @@ type AddUser struct {
 	Weight            int          `json:"weight"`
 	CarbohydrateRatio int          `json:"carbohydrate-ratio"`
 	BreadUnit         int          `json:"bread-unit"`
+}
+
+func (u *AddUser) UnmarshalJSON(data []byte) error {
+	type Alias AddUser
+	aux := &struct {
+		Birthday string `json:"birthday"`
+		*Alias
+	}{
+		Alias: (*Alias)(u),
+	}
+	err := json.Unmarshal(data, &aux)
+	if err != nil {
+		return err
+	}
+	u.Birthday, err = time.Parse("2006-01-02", aux.Birthday)
+	return err
 }

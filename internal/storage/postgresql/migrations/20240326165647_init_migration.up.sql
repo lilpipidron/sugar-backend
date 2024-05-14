@@ -1,13 +1,13 @@
 create type note_types as enum
     (
-        'regular'
-            'sugar'
+        'regular',
+        'sugar'
         );
 
 create type genders as enum
     (
-        'male'
-            'female'
+        'male',
+        'female'
         );
 
 create table users
@@ -35,19 +35,18 @@ create table products
     carbs        bigint not null
 );
 
-
-create table note_user
-(
-    note_id bigint not null references note_header (note_id),
-    user_id bigint not null references users (user_id)
-);
-
 create table note_header
 (
     note_id     bigint primary key generated always as identity,
     note_type   note_types not null,
     create_date date       not null,
     sugar_level real
+);
+
+create table note_user
+(
+    note_id bigint not null references note_header (note_id),
+    user_id bigint not null references users (user_id)
 );
 
 create table note_detail

@@ -15,7 +15,7 @@ import (
 )
 
 type UserSaver interface {
-	AddUser(user users.User, password string) error
+	AddNewUser(user users.User, password string) error
 }
 
 func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
@@ -30,7 +30,6 @@ func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 		var userAdd request.AddUser
 		var req request.Request = &userAdd
 		request.Decode(w, r, &req)
-		userAdd = (req).(request.AddUser)
 
 		log.Info("decoded request body", userAdd)
 
@@ -59,7 +58,7 @@ func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 			UserInfo: userInfo,
 		}
 
-		err := userSaver.AddUser(user, userAdd.Password)
+		err := userSaver.AddNewUser(user, userAdd.Password)
 		if err != nil {
 			log.Error(err)
 

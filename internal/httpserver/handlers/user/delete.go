@@ -28,7 +28,6 @@ func NewUserDelete(logger *log.Logger, userDeleter UserDeleter) http.HandlerFunc
 		var userDelete request.DeleteUser
 		var req request.Request = &userDelete
 		request.Decode(w, r, &req)
-		userDelete = (req).(request.DeleteUser)
 
 		log.Info("decoded request body", userDelete)
 

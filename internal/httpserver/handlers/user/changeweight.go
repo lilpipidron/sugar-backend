@@ -28,7 +28,6 @@ func NewWeightChanger(logger *log.Logger, weightChanger WeightChanger) http.Hand
 		var changeWeight request.ChangeWeight
 		var req request.Request = &changeWeight
 		request.Decode(w, r, &req)
-		changeWeight = (req).(request.ChangeWeight)
 
 		log.Info("decoded request body", changeWeight)
 

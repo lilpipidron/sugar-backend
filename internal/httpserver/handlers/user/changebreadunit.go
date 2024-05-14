@@ -28,7 +28,6 @@ func NewBreadUnitChanger(logger *log.Logger, breadUnitChanger BreadUnitChanger) 
 		var changeBreadUnit request.ChangeBreadUnit
 		var req request.Request = &changeBreadUnit
 		request.Decode(w, r, &req)
-		changeBreadUnit = (req).(request.ChangeBreadUnit)
 
 		log.Info("decoded request body", changeBreadUnit)
 

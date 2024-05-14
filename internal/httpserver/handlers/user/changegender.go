@@ -29,7 +29,6 @@ func NewGenderChanger(logger *log.Logger, genderChanger GenderChanger) http.Hand
 		var changeGender request.ChangeGender
 		var req request.Request = &changeGender
 		request.Decode(w, r, &req)
-		changeGender = (req).(request.ChangeGender)
 
 		log.Info("decoded request body", changeGender)
 

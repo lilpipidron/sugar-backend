@@ -29,7 +29,6 @@ func NewBirthdayChanger(logger *log.Logger, birthdayChanger BirthdayChanger) htt
 		var changeBirthday request.ChangeBirthday
 		var req request.Request = &changeBirthday
 		request.Decode(w, r, &req)
-		changeBirthday = (req).(request.ChangeBirthday)
 
 		log.Info("decoded request body", changeBirthday)
 

@@ -28,7 +28,6 @@ func NewCarbohydrateRatioChanger(logger *log.Logger, carbohydrateRatioChanger Ca
 		var changeCarbohydrateRatio request.ChangeCarbohydrateRatio
 		var req request.Request = &changeCarbohydrateRatio
 		request.Decode(w, r, &req)
-		changeCarbohydrateRatio = (req).(request.ChangeCarbohydrateRatio)
 
 		log.Info("decoded request body", changeCarbohydrateRatio)
 

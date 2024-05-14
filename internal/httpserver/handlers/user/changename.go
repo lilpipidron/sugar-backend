@@ -28,7 +28,6 @@ func NewNameChanger(logger *log.Logger, nameChanger NameChanger) http.HandlerFun
 		var changeName request.ChangeName
 		var req request.Request = &changeName
 		request.Decode(w, r, &req)
-		changeName = (req).(request.ChangeName)
 
 		log.Info("decoded request body", changeName)
 

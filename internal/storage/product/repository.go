@@ -81,6 +81,7 @@ func (db *repository) GetCarbsAmount(name string) (int, error) {
 	}(row)
 
 	var carbs int
+	row.Next()
 	err = row.Scan(&carbs)
 	if err != nil {
 		return -1, fmt.Errorf("%s: failed scan product's row: %w", op, err)

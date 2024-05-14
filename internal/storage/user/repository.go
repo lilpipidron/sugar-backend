@@ -64,10 +64,19 @@ func (db *repository) FindUser(login, password string) (*users.User, error) {
 	}(row)
 
 	u := &users.User{}
-	err = row.Scan(&u.UserID, &u.Login, &u.UserInfo.Name, &u.UserInfo.Birthday, &u.UserInfo.Gender, &u.UserInfo.Weight, &u.UserInfo.CarbohydrateRatio, &u.UserInfo.BreadUnit)
+	row.Next()
+	err = row.Scan(&u.UserID, &u.Login, &u.Password) /*, &u.UserInfo.Birthday, &u.UserInfo.Gender, &u.UserInfo.Weight, &u.UserInfo.CarbohydrateRatio, &u.UserInfo.BreadUnit)*/
 	if err != nil {
 		return nil, fmt.Errorf("%s: failed scan row: %w", op, err)
 	}
+
+	query = "SELECT * FROM user_info where user_id = $1"
+	row, err = db.DB.Query(query, u.UserID)
+	if err != nil {
+		return nil, fmt.Errorf("%s: failed find user_info: %w", op, err)
+	}
+	row.Next()
+	err = row.Scan(&u.UserInfo.Birthday, &u.UserInfo.Gender, &u.UserInfo.Weight, &u.UserInfo.CarbohydrateRatio, &u.UserInfo.BreadUnit)
 
 	return u, nil
 }

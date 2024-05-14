@@ -53,6 +53,6 @@ create table note_header
 create table note_detail
 (
     note_id        bigint not null references note_header (note_id),
-    product_id     bigint not null references product (product_id),
+    product_id     bigint not null references products (product_id),
     product_amount bigint not null
 );

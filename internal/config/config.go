@@ -22,8 +22,8 @@ type Database struct {
 	User     string
 	Password string
 	DBName   string
-  Host     string
-  Port     int
+	Host     string
+	Port     int
 }
 
 func retrieveDatabaseConfig(config *Config) {
@@ -32,13 +32,13 @@ func retrieveDatabaseConfig(config *Config) {
 	dbData.User = os.Getenv("DB_USER")
 	dbData.Password = os.Getenv("DB_PASSWORD")
 	dbData.DBName = os.Getenv("DB_NAME")
-  dbData.Host = os.Getenv("DB_HOST")
+	dbData.Host = os.Getenv("DB_HOST")
 
-  port, err := strconv.Atoi(os.Getenv("DB_PORT"))
-  if err != nil {
-    log.Fatal("failed to parse database port", "err", err)
-  }
-  dbData.Port = port
+	port, err := strconv.Atoi(os.Getenv("DB_PORT"))
+	if err != nil {
+		log.Fatal("failed to parse database port", "err", err)
+	}
+	dbData.Port = port
 
 	config.Database = dbData
 }

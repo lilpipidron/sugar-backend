@@ -69,7 +69,7 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 	router.Use(logger.New(log))
-	router.Get("/{login}{password}", user.NewUserGetter(log, userRepository))
+	router.Get("/user", user.NewUserGetter(log, userRepository))
 
 	srv := &http.Server{
 		Addr:    cfg.Address,

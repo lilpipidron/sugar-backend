@@ -1,8 +1,6 @@
 package user
 
 import (
-	"net/http"
-
 	"github.com/charmbracelet/log"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
@@ -11,6 +9,7 @@ import (
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/response"
 	resp "github.com/lilpipidron/sugar-backend/internal/lib/api/response"
 	"github.com/lilpipidron/sugar-backend/internal/models/users"
+	"net/http"
 )
 
 type UserGetter interface {
@@ -29,7 +28,6 @@ func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
 		var getUser request.GetUser
 		var req request.Request = &getUser
 		request.Decode(w, r, &req)
-		getUser = (req).(request.GetUser)
 
 		log.Info("decoded request body", getUser)
 

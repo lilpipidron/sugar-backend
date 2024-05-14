@@ -7,6 +7,7 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 type Storage struct {
@@ -26,7 +27,7 @@ func New(psqlInfo, dbname string) (*Storage, error) {
 		return nil, fmt.Errorf("%s: %w", errFunc, err)
 	}
 
-	migration, err := migrate.NewWithDatabaseInstance("file:/migration", dbname, driver)
+	migration, err := migrate.NewWithDatabaseInstance("file:/migrations", dbname, driver)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", errFunc, err)
 	}

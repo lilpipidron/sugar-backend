@@ -71,6 +71,7 @@ func main() {
 	router.Use(logger.New(log))
 	router.Get("/user", user.NewUserGetter(log, userRepository))
 	router.Post("/user", user.NewUserSaver(log, userRepository))
+	
 	srv := &http.Server{
 		Addr:    cfg.Address,
 		Handler: router,

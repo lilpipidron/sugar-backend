@@ -69,9 +69,17 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 	router.Use(logger.New(log))
+
 	router.Get("/user", user.NewUserGetter(log, userRepository))
 	router.Post("/user", user.NewUserSaver(log, userRepository))
-	
+	router.Delete("/user", user.NewUserDelete(log, userRepository))
+	router.Put("/user/birthday", user.NewBirthdayChanger(log, userRepository))
+	router.Put("/user/breadUnit", user.NewBreadUnitChanger(log, userRepository))
+	router.Put("/user/carbohydrateRatio", user.NewCarbohydrateRatioChanger(log, userRepository))
+	router.Put("/user/gender", user.NewGenderChanger(log, userRepository))
+	router.Put("/user/name", user.NewNameChanger(log, userRepository))
+	router.Put("/user/weight", user.NewWeightChanger(log, userRepository))
+
 	srv := &http.Server{
 		Addr:    cfg.Address,
 		Handler: router,

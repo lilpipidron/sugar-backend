@@ -18,7 +18,7 @@
 
     1. **Clone the repository**:
        ```bash
-       git clone https://github.com/lilpipidron/sugar-backend.git
+       git clone https://github.com/lilpipidron/sugar-backend
        cd sugar-backend
        ```
 

@@ -1,5 +1,5 @@
 package request
 
-type GetProduct struct {
+type GetProducts struct {
 	Name string `json:"name"`
 }

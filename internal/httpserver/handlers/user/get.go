@@ -50,7 +50,7 @@ func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
 			return
 		}
 
-		log.Info("succesfully get user")
+		log.Info("successfully get user")
 		response.ResponseOKWithData(w, r, user)
 	}
 }

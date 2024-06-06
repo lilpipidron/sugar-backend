@@ -1,7 +1,7 @@
 package request
 
 type AddProduct struct {
-	ProductID int    `json:"id"`
+	ProductID int64  `json:"id"`
 	Name      string `json:"name"`
 	Carbs     int    `json:"carbs"`
 }

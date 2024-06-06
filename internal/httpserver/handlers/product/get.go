@@ -45,7 +45,7 @@ func NewProductsGetter(logger *log.Logger, productsGetter ProductsGetter) http.H
 		if err != nil {
 			log.Error(err)
 
-			render.JSON(w, r, resp.Error("failed to add product"))
+			render.JSON(w, r, resp.Error("failed to get product"))
 
 			return
 		}

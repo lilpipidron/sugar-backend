@@ -6,7 +6,8 @@ import (
 )
 
 type AddNote struct {
-	NoteID     int64          `json:"id"`
+	UserID     int64          `json:"user-id"`
+	NoteID     int64          `json:"note-id"`
 	NoteType   notes.NoteType `json:"note-type"`
 	DateTime   time.Time      `json:"date-time"`
 	SugarLevel int            `json:"sugar-level"`

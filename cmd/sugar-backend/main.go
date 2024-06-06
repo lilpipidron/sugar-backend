@@ -11,8 +11,10 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	"github.com/lilpipidron/sugar-backend/internal/config"
+	"github.com/lilpipidron/sugar-backend/internal/httpserver/handlers/note"
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/handlers/user"
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/middleware/logger"
+	nt "github.com/lilpipidron/sugar-backend/internal/storage/note"
 	"github.com/lilpipidron/sugar-backend/internal/storage/postgresql"
 	pr "github.com/lilpipidron/sugar-backend/internal/storage/product"
 	ur "github.com/lilpipidron/sugar-backend/internal/storage/user"
@@ -64,6 +66,7 @@ func main() {
 
 	userRepository := ur.NewUserRepository(storage.DB)
 	productRepository := pr.NewProductRepository(storage.DB)
+	noteRepository := nt.NewNoteRepository(storage.DB)
 
 	router := chi.NewRouter()
 
@@ -75,17 +78,22 @@ func main() {
 
 	router.Get("/user", user.NewUserGetter(log, userRepository))
 	router.Post("/user", user.NewUserSaver(log, userRepository))
-	router.Delete("/user", user.NewUserDelete(log, userRepository))
 	router.Put("/user/birthday", user.NewBirthdayChanger(log, userRepository))
 	router.Put("/user/breadUnit", user.NewBreadUnitChanger(log, userRepository))
 	router.Put("/user/carbohydrateRatio", user.NewCarbohydrateRatioChanger(log, userRepository))
 	router.Put("/user/gender", user.NewGenderChanger(log, userRepository))
 	router.Put("/user/name", user.NewNameChanger(log, userRepository))
 	router.Put("/user/weight", user.NewWeightChanger(log, userRepository))
+	router.Delete("/user", user.NewUserDelete(log, userRepository))
 
-	router.Post("/product", product.NewProductSaver(log, productRepository))
 	router.Get("/product", product.NewProductsGetter(log, productRepository))
 	router.Get("/product/carbs", product.NewCarbsAmountGetter(log, productRepository))
+	router.Post("/product", product.NewProductSaver(log, productRepository))
+
+	router.Get("/note", note.NewNoteGetter(log, noteRepository))
+	router.Get("/note/date", note.NewNoteGetterByDate(log, noteRepository))
+	router.Post("/note", note.NewNoteSaver(log, noteRepository))
+	router.Delete("/note", note.NewNoteDelete(log, noteRepository))
 
 	srv := &http.Server{
 		Addr:    cfg.Address,

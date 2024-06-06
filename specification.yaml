@@ -1,0 +1,353 @@
+openapi: 3.0.1
+info:
+  title: User and Note Management API
+  description: API for managing users, notes, and products
+  version: 1.0.0
+paths:
+  /user:
+    get:
+      summary: Get user by login and password
+      parameters:
+        - name: login
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  login:
+                    type: string
+                  password:
+                    type: string
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUser'
+      responses:
+        '201':
+          description: User created successfully
+    delete:
+      summary: Delete a user by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteUser'
+      responses:
+        '200':
+          description: User deleted successfully
+  /user/birthday:
+    put:
+      summary: Change user's birthday
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeBirthday'
+      responses:
+        '200':
+          description: Birthday changed successfully
+  /user/breadUnit:
+    put:
+      summary: Change user's bread unit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeBreadUnit'
+      responses:
+        '200':
+          description: Bread unit changed successfully
+  /user/carbohydrateRatio:
+    put:
+      summary: Change user's carbohydrate ratio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeCarbohydrateRatio'
+      responses:
+        '200':
+          description: Carbohydrate ratio changed successfully
+  /user/gender:
+    put:
+      summary: Change user's gender
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeGender'
+      responses:
+        '200':
+          description: Gender changed successfully
+  /user/name:
+    put:
+      summary: Change user's name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeName'
+      responses:
+        '200':
+          description: Name changed successfully
+  /user/weight:
+    put:
+      summary: Change user's weight
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeWeight'
+      responses:
+        '200':
+          description: Weight changed successfully
+  /product:
+    get:
+      summary: Get products by name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+    post:
+      summary: Add a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddProduct'
+      responses:
+        '201':
+          description: Product added successfully
+  /product/carbs:
+    get:
+      summary: Get carbohydrate amount for a product by name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+  /note:
+    get:
+      summary: Get notes by user ID
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+    post:
+      summary: Add a new note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddNote'
+      responses:
+        '201':
+          description: Note added successfully
+    delete:
+      summary: Delete a note by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteNote'
+      responses:
+        '200':
+          description: Note deleted successfully
+  /note/date:
+    get:
+      summary: Get notes by user ID and date
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: date-time
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  date-time:
+                    type: string
+                    format: date-time
+components:
+  schemas:
+    AddUser:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        birthday:
+          type: string
+          format: date-time
+        gender:
+          type: string
+        weight:
+          type: integer
+        carbohydrate-ratio:
+          type: integer
+        bread-unit:
+          type: integer
+    ChangeBirthday:
+      type: object
+      properties:
+        id:
+          type: integer
+        new_birthday:
+          type: string
+          format: date-time
+    ChangeBreadUnit:
+      type: object
+      properties:
+        id:
+          type: integer
+        new_bread_unit:
+          type: integer
+    ChangeCarbohydrateRatio:
+      type: object
+      properties:
+        id:
+          type: integer
+        new_carbohydrate_ratio:
+          type: integer
+    ChangeGender:
+      type: object
+      properties:
+        id:
+          type: integer
+        new_gender:
+          type: string
+    ChangeName:
+      type: object
+      properties:
+        id:
+          type: integer
+        new_name:
+          type: string
+    ChangeWeight:
+      type: object
+      properties:
+        id:
+          type: integer
+        new_weight:
+          type: integer
+    DeleteUser:
+      type: object
+      properties:
+        id:
+          type: integer
+    AddProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        carbs:
+          type: integer
+    AddNote:
+      type: object
+      properties:
+        user-id:
+          type: integer
+        note-id:
+          type: integer
+        note-type:
+          type: string
+        date-time:
+          type: string
+          format: date-time
+        sugar-level:
+          type: integer
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              carbs:
+                type: integer
+    DeleteNote:
+      type: object
+      properties:
+        id:
+          type: integer

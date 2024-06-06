@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/lilpipidron/sugar-backend/internal/httpserver/handlers/product"
 	"net/http"
 	"os"
 
@@ -13,6 +14,7 @@ import (
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/handlers/user"
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/middleware/logger"
 	"github.com/lilpipidron/sugar-backend/internal/storage/postgresql"
+	pr "github.com/lilpipidron/sugar-backend/internal/storage/product"
 	ur "github.com/lilpipidron/sugar-backend/internal/storage/user"
 )
 
@@ -61,6 +63,7 @@ func main() {
 	}
 
 	userRepository := ur.NewUserRepository(storage.DB)
+	productRepository := pr.NewProductRepository(storage.DB)
 
 	router := chi.NewRouter()
 
@@ -79,6 +82,10 @@ func main() {
 	router.Put("/user/gender", user.NewGenderChanger(log, userRepository))
 	router.Put("/user/name", user.NewNameChanger(log, userRepository))
 	router.Put("/user/weight", user.NewWeightChanger(log, userRepository))
+
+	router.Post("/product", product.NewProductSaver(log, productRepository))
+	router.Get("/product", product.NewProductsGetter(log, productRepository))
+	router.Get("/product/carbs", product.NewCarbsAmountGetter(log, productRepository))
 
 	srv := &http.Server{
 		Addr:    cfg.Address,

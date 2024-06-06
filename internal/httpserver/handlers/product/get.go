@@ -13,7 +13,7 @@ import (
 )
 
 type ProductsGetter interface {
-	GetProducts(value string) ([]*products.Product, error)
+	GetProductsWithValueInName(value string) ([]*products.Product, error)
 }
 
 func NewProductsGetter(logger *log.Logger, productsGetter ProductsGetter) http.HandlerFunc {
@@ -41,7 +41,7 @@ func NewProductsGetter(logger *log.Logger, productsGetter ProductsGetter) http.H
 			return
 		}
 
-		productsArr, err := productsGetter.GetProducts(productsGet.Name)
+		productsArr, err := productsGetter.GetProductsWithValueInName(productsGet.Name)
 		if err != nil {
 			log.Error(err)
 

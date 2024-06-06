@@ -13,7 +13,7 @@ import (
 )
 
 type ProductSaver interface {
-	AddNewProduct(product products.Product) error
+	AddProduct(product products.Product) error
 }
 
 func NewProductSaver(logger *log.Logger, productSaver ProductSaver) http.HandlerFunc {
@@ -47,7 +47,7 @@ func NewProductSaver(logger *log.Logger, productSaver ProductSaver) http.Handler
 			Carbs:     productAdd.Carbs,
 		}
 
-		err := productSaver.AddNewProduct(product)
+		err := productSaver.AddProduct(product)
 		if err != nil {
 			log.Error(err)
 

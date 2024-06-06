@@ -1,5 +1,5 @@
 package request
 
-type GetCarbsAmountRequest struct {
+type GetCarbsAmount struct {
 	Name string `json:"name"`
 }

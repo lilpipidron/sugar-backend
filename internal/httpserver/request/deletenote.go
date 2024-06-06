@@ -1,5 +1,5 @@
 package request
 
 type DeleteNote struct {
-	UserID int64 `json:"id"`
+	NoteID int64 `json:"id"`
 }

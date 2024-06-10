@@ -67,7 +67,7 @@
 
     EXPOSE 8080
 
-    CMD ["./sugar-backend"]
+    CMD ["./main.go"]
     ```
 
     #### docker-compose.yaml

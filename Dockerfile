@@ -10,4 +10,4 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o sugar-backend ./c
 
 EXPOSE 8080
 
-CMD ["./sugar-backend"]
+CMD ["./main.go"]

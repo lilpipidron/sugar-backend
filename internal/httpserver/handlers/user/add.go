@@ -20,7 +20,7 @@ type UserSaver interface {
 
 func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.user.add.NewUserAdd"
+		const op = "handlers.user.add.NewUserSaver"
 
 		logger = log.With(
 			"op: "+op,

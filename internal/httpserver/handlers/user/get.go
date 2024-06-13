@@ -22,14 +22,18 @@ func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
 
 		logger = log.With(
 			"op: "+op,
-			"request_id"+middleware.GetReqID(r.Context()),
+			"request_id: "+middleware.GetReqID(r.Context()),
 		)
 
-		var getUser request.GetUser
-		var req request.Request = &getUser
-		request.Decode(w, r, &req)
+		login := r.URL.Query().Get("login")
+		password := r.URL.Query().Get("password")
 
-		log.Info("decoded request body", getUser)
+		getUser := request.GetUser{
+			Login:    login,
+			Password: password,
+		}
+
+		log.Info("decoded query parameters", getUser)
 
 		if err := validator.New().Struct(getUser); err != nil {
 			validateErr := err.(validator.ValidationErrors)

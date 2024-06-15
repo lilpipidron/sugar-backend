@@ -84,8 +84,10 @@ func (db *repository) FindUser(login, password string) (*users.User, error) {
 		return nil, fmt.Errorf("%s: failed find user_info: %w", op, err)
 	}
 	row.Next()
-	err = row.Scan(&u.UserInfo.Birthday, &u.UserInfo.Gender, &u.UserInfo.Weight, &u.UserInfo.CarbohydrateRatio, &u.UserInfo.BreadUnit)
-
+	err = row.Scan(&u.UserID, &u.UserInfo.Name, &u.UserInfo.Birthday, &u.UserInfo.Gender, &u.UserInfo.Weight, &u.UserInfo.CarbohydrateRatio, &u.UserInfo.BreadUnit)
+	if err != nil {
+		return nil, fmt.Errorf("%s: failed scan user_info: %w", op, err)
+	}
 	return u, nil
 }
 

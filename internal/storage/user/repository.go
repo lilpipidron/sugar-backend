@@ -94,8 +94,14 @@ func (db *repository) FindUser(login, password string) (*users.User, error) {
 func (db *repository) DeleteUser(userID int64) error {
 	const op = "storage.user.DeleteUser"
 
-	query := "DELETE FROM users WHERE user_id = $1"
+	query := "DELETE FROM user_info WHERE user_id = $1"
 	_, err := db.DB.Exec(query, userID)
+	if err != nil {
+		return fmt.Errorf("%s: failed delete user_info: %w", op, err)
+	}
+
+	query = "DELETE FROM users WHERE user_id = $1"
+	_, err = db.DB.Exec(query, userID)
 	if err != nil {
 		return fmt.Errorf("%s: failed delete user: %w", op, err)
 	}

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/handlers/product"
+	"github.com/rs/cors"
 	"net/http"
 	"os"
 
@@ -70,6 +71,14 @@ func main() {
 
 	router := chi.NewRouter()
 
+	corsMiddleware := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
+
+	router.Use(corsMiddleware.Handler)
 	router.Use(middleware.RequestID)
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)

@@ -26,11 +26,15 @@ func NewNoteGetterByDate(logger *log.Logger, noteGetter NoteGetterByDate) http.H
 			"request_id"+middleware.GetReqID(r.Context()),
 		)
 
-		var noteGetByDate request.GetNotesByDate
-		var req request.Request = &noteGetByDate
-		request.Decode(w, r, &req)
+		date, err := time.Parse("2006-01-02", r.URL.Query().Get("date"))
+		if err != nil {
+			log.Error("failed to parse date", "date", r.URL.Query().Get("date"))
+		}
+		noteGetByDate := request.GetNotesByDate{
+			DateTime: date,
+		}
 
-		log.Info("decoded request body", noteGetByDate)
+		log.Info("decoded query parameters", noteGetByDate)
 
 		if err := validator.New().Struct(noteGetByDate); err != nil {
 			validateErr := err.(validator.ValidationErrors)

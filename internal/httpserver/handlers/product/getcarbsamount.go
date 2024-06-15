@@ -24,11 +24,11 @@ func NewCarbsAmountGetter(logger *log.Logger, carbsAmountGetter CarbsAmountGette
 			"request_id"+middleware.GetReqID(r.Context()),
 		)
 
-		var getCarbsAmount request.GetCarbsAmount
-		var req request.Request = &getCarbsAmount
-		request.Decode(w, r, &req)
+		getCarbsAmount := &request.GetCarbsAmount{
+			Name: r.URL.Query().Get("name"),
+		}
 
-		log.Info("decoded request body", getCarbsAmount)
+		log.Info("decoded query parameters", getCarbsAmount)
 
 		if err := validator.New().Struct(getCarbsAmount); err != nil {
 			validateErr := err.(validator.ValidationErrors)

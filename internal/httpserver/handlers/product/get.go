@@ -25,11 +25,11 @@ func NewProductsGetter(logger *log.Logger, productsGetter ProductsGetter) http.H
 			"request_id "+middleware.GetReqID(r.Context()),
 		)
 
-		var productsGet request.GetProducts
-		var req request.Request = &productsGet
-		request.Decode(w, r, &req)
+		productsGet := request.GetProducts{
+			Name: r.URL.Query().Get("name"),
+		}
 
-		log.Info("decoded request body", productsGet)
+		log.Info("decoded query parameters", productsGet)
 
 		if err := validator.New().Struct(productsGet); err != nil {
 			validateErr := err.(validator.ValidationErrors)

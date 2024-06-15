@@ -10,6 +10,7 @@ import (
 	resp "github.com/lilpipidron/sugar-backend/internal/lib/api/response"
 	"github.com/lilpipidron/sugar-backend/internal/models/notes"
 	"net/http"
+	"strconv"
 )
 
 type NoteGetter interface {
@@ -24,12 +25,15 @@ func NewNoteGetter(logger *log.Logger, noteGetter NoteGetter) http.HandlerFunc {
 			"op: "+op,
 			"request_id"+middleware.GetReqID(r.Context()),
 		)
+		id, err := strconv.ParseInt(middleware.GetReqID(r.Context()), 10, 64)
+		if err != nil {
+			log.Error("invalid request id", "id", id, "error", err)
+		}
+		noteGet := request.GetNotes{
+			UserID: id,
+		}
 
-		var noteGet request.GetNotes
-		var req request.Request = &noteGet
-		request.Decode(w, r, &req)
-
-		log.Info("decoded request body", noteGet)
+		log.Info("decoded query parameters", noteGet)
 
 		if err := validator.New().Struct(noteGet); err != nil {
 			validateErr := err.(validator.ValidationErrors)

@@ -50,6 +50,7 @@ func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 			Weight:            userAdd.Weight,
 			CarbohydrateRatio: userAdd.CarbohydrateRatio,
 			BreadUnit:         userAdd.BreadUnit,
+			Height:            userAdd.Height,
 		}
 
 		user := users.User{

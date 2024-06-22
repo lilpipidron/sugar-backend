@@ -9,4 +9,5 @@ type UserInfo struct {
 	Weight            int       `json:"weight"`
 	CarbohydrateRatio int       `json:"carbohydrate-ratio"`
 	BreadUnit         int       `json:"bread-unit"`
+	Height            int       `json:"height"`
 }

@@ -25,7 +25,8 @@ create table user_info
     gender             genders not null,
     weight             bigint  not null,
     carbohydrate_ratio real    not null,
-    bread_unit         bigint  not null
+    bread_unit         bigint  not null,
+    height             bigint  not null
 );
 
 create table products

@@ -87,6 +87,7 @@ func main() {
 
 	router.Get("/user", user.NewUserGetter(log, userRepository))
 	router.Post("/user", user.NewUserSaver(log, userRepository))
+	router.Put("/user", user.NewUserInfoChanger(log, userRepository))
 	router.Put("/user/birthday", user.NewBirthdayChanger(log, userRepository))
 	router.Put("/user/breadUnit", user.NewBreadUnitChanger(log, userRepository))
 	router.Put("/user/carbohydrateRatio", user.NewCarbohydrateRatioChanger(log, userRepository))

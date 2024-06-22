@@ -19,6 +19,7 @@ type Repository interface {
 	ChangeWeight(userID int64, newWeight int) error
 	ChangeCarbohydrateRatio(userID int64, newCarbohydrateRatio int) error
 	ChangeBreadUnit(userID int64, newBreadUnit int) error
+	ChangeAllInfo(userID int64, newName string, newBirthday time.Time, newGender users.Gender, newWeight int, newCarbohydrate int, newBreadUnit int, newHeight int) error
 }
 
 type repository struct {
@@ -46,8 +47,8 @@ func (db *repository) AddNewUser(user users.User, password string) error {
 		return fmt.Errorf("%s: failed get last user id: %w", op, err)
 	}
 
-	query = "INSERT INTO user_info (user_id, name, birthday, gender, weight, carbohydrate_ratio, bread_unit) VALUES ($1, $2, $3, $4, $5, $6, $7)"
-	_, err = db.DB.Exec(query, id, user.UserInfo.Name, user.UserInfo.Birthday, user.UserInfo.Gender, user.UserInfo.Weight, user.UserInfo.CarbohydrateRatio, user.UserInfo.BreadUnit)
+	query = "INSERT INTO user_info (user_id, name, birthday, gender, weight, carbohydrate_ratio, bread_unit, height) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
+	_, err = db.DB.Exec(query, id, user.UserInfo.Name, user.UserInfo.Birthday, user.UserInfo.Gender, user.UserInfo.Weight, user.UserInfo.CarbohydrateRatio, user.UserInfo.BreadUnit, user.UserInfo.Height)
 	if err != nil {
 		return fmt.Errorf("%s: failed add user info: %w", op, err)
 	}
@@ -73,7 +74,7 @@ func (db *repository) FindUser(login, password string) (*users.User, error) {
 
 	u := &users.User{}
 	row.Next()
-	err = row.Scan(&u.UserID, &u.Login, &u.Password) /*, &u.UserInfo.Birthday, &u.UserInfo.Gender, &u.UserInfo.Weight, &u.UserInfo.CarbohydrateRatio, &u.UserInfo.BreadUnit)*/
+	err = row.Scan(&u.UserID, &u.Login, &u.Password)
 	if err != nil {
 		return nil, fmt.Errorf("%s: failed scan row: %w", op, err)
 	}
@@ -122,7 +123,7 @@ func (db *repository) ChangeName(userID int64, newName string) error {
 }
 
 func (db *repository) ChangeBirthday(userID int64, newBirthday time.Time) error {
-	const op = "storage.user.ChangeBirhday"
+	const op = "storage.user.ChangeBirthday"
 
 	query := "UPDATE user_info SET birthday = $2 WHERE user_id = $1"
 	_, err := db.DB.Exec(query, userID, newBirthday)
@@ -170,12 +171,54 @@ func (db *repository) ChangeCarbohydrateRatio(userID int64, newCarbohydrateRatio
 }
 
 func (db *repository) ChangeBreadUnit(userID int64, newBreadUnit int) error {
-	const op = "storage.user.BreadUnit"
+	const op = "storage.user.ChangeBreadUnit"
 
 	query := "UPDATE user_info SET bread_unit = $2 WHERE user_id = $1"
 	_, err := db.DB.Exec(query, userID, newBreadUnit)
 	if err != nil {
 		return fmt.Errorf("%s: failed change bread unit: %w", op, err)
+	}
+
+	return nil
+}
+
+func (db *repository) ChangeAllInfo(userID int64, newName string, newBirthday time.Time, newGender users.Gender, newWeight int, newCarbohydrate int, newBreadUnit int, newHeight int) error {
+	const op = "storage.user.ChangeAllInfo"
+
+	err := db.ChangeName(userID, newName)
+	if err != nil {
+		return err
+	}
+
+	err = db.ChangeBirthday(userID, newBirthday)
+	if err != nil {
+		return err
+	}
+
+	err = db.ChangeGender(userID, newGender)
+	if err != nil {
+		return err
+	}
+
+	err = db.ChangeWeight(userID, newWeight)
+	if err != nil {
+		return err
+	}
+
+	err = db.ChangeCarbohydrateRatio(userID, newCarbohydrate)
+	if err != nil {
+		return err
+	}
+
+	err = db.ChangeBreadUnit(userID, newBreadUnit)
+	if err != nil {
+		return err
+	}
+
+	query := "UPDATE user_info SET height = $2 WHERE user_id = $1"
+	_, err = db.DB.Exec(query, userID, newHeight)
+	if err != nil {
+		return fmt.Errorf("%s: failed change height: %w", op, err)
 	}
 
 	return nil

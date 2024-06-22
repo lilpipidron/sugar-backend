@@ -64,6 +64,36 @@ func (db *repository) GetProductsWithValueInName(value string) ([]*products.Prod
 	return product, nil
 }
 
+func (db *repository) GetAllProducts() ([]*products.Product, error) {
+	const op = "storage.Product.GetAllProducts"
+
+	query := "SELECT * FROM products order by product_name"
+	rows, err := db.DB.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("%s: failed get all products: %w", op, err)
+	}
+
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			log.Println(fmt.Errorf("%s: failed close product's rows: %w", op, err))
+		}
+	}(rows)
+
+	var product []*products.Product
+
+	for rows.Next() {
+		p := &products.Product{}
+		err = rows.Scan(&p.ProductID, &p.Name, &p.Carbs)
+		if err != nil {
+			return nil, fmt.Errorf("%s: failed scan product's rows: %w", op, err)
+		}
+		product = append(product, p)
+	}
+
+	return product, nil
+}
+
 func (db *repository) GetCarbsAmount(name string) (int, error) {
 	const op = "storage.product.GetCarbsAmount"
 

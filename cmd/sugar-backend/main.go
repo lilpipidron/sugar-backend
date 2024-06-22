@@ -96,6 +96,7 @@ func main() {
 	router.Delete("/user", user.NewUserDelete(log, userRepository))
 
 	router.Get("/product", product.NewProductsGetter(log, productRepository))
+	router.Get("/product/all", product.NewAllProductsGetter(log, productRepository))
 	router.Get("/product/carbs", product.NewCarbsAmountGetter(log, productRepository))
 	router.Post("/product", product.NewProductSaver(log, productRepository))
 

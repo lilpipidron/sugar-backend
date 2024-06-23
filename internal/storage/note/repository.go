@@ -29,11 +29,14 @@ func (db *repository) AddNote(note notes.Note, userID int64) error {
 	const op = "storage.note.AddNote"
 
 	query := "INSERT INTO note_header (note_type, create_date, sugar_level) VALUES (($1), ($2), ($3))"
-	noteID, err := db.DB.Exec(query, note.NoteType, note.DateTime, note.SugarLevel)
+	result, err := db.DB.Exec(query, note.NoteType, note.DateTime, note.SugarLevel)
 	if err != nil {
 		return fmt.Errorf("%s: failed add note in note_header: %w", op, err)
 	}
-
+	noteID, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("%s: failed get noteID: %w", op, err)
+	}
 	query = "INSERT INTO note_user (note_id, user_id) VALUES ($1, $2)"
 	_, err = db.DB.Exec(query, noteID, userID)
 	if err != nil {

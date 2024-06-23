@@ -28,8 +28,8 @@ func NewNoteRepository(db *sql.DB) *repository {
 func (db *repository) AddNote(note notes.Note, userID int64) error {
 	const op = "storage.note.AddNote"
 
-	query := "INSERT INTO note_header (user_id, note_type, create_date, sugar_level) VALUES (($1), ($2), ($3), ($4))"
-	noteID, err := db.DB.Exec(query, userID, note.NoteType, note.DateTime, note.SugarLevel)
+	query := "INSERT INTO note_header (note_type, create_date, sugar_level) VALUES (($1), ($2), ($3))"
+	noteID, err := db.DB.Exec(query, note.NoteType, note.DateTime, note.SugarLevel)
 	if err != nil {
 		return fmt.Errorf("%s: failed add note in note_header: %w", op, err)
 	}

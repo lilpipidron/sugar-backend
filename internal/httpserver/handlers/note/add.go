@@ -46,7 +46,6 @@ func NewNoteSaver(logger *log.Logger, noteSaver NoteSaver) http.HandlerFunc {
 			NoteType:   noteAdd.NoteType,
 			DateTime:   noteAdd.DateTime,
 			SugarLevel: noteAdd.SugarLevel,
-			Products:   noteAdd.Products,
 		}
 
 		err := noteSaver.AddNote(note, noteAdd.UserID)

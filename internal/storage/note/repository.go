@@ -40,14 +40,6 @@ func (db *repository) AddNote(note notes.Note, userID int64) error {
 		return fmt.Errorf("%s: failed add note in note_user: %w", op, err)
 	}
 
-	query = "INSERT INTO note_detail (note_id, product_id, product_amount) VALUES ($1, $2)"
-	for _, product := range note.Products {
-		_, err = db.DB.Exec(query, noteID, product.Product.ProductID, product.Amount)
-		if err != nil {
-			return fmt.Errorf("%s: failed insert product in note_detail: %w", op, err)
-		}
-	}
-
 	return nil
 }
 

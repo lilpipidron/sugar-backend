@@ -80,6 +80,7 @@ func (db *repository) GetAllNotes(userID int64) ([]*notes.Note, error) {
 		}(row)
 
 		n := &notes.Note{}
+		row.Next()
 		err = row.Scan(&n.NoteID, &n.NoteType, &n.DateTime, &n.SugarLevel)
 		if err != nil {
 			return nil, fmt.Errorf("%s: failed scan note's row (note header): %w", op, err)

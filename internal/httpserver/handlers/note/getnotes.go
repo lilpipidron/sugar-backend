@@ -25,10 +25,12 @@ func NewNoteGetter(logger *log.Logger, noteGetter NoteGetter) http.HandlerFunc {
 			"op: "+op,
 			"request_id"+middleware.GetReqID(r.Context()),
 		)
-		id, err := strconv.ParseInt(middleware.GetReqID(r.Context()), 10, 64)
+
+		id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
 		if err != nil {
-			log.Error("invalid request id", "id", id, "error", err)
+			log.Error("failed get user id: ", "err", err)
 		}
+
 		noteGet := request.GetNotes{
 			UserID: id,
 		}

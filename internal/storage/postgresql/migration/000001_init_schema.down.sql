@@ -10,6 +10,4 @@ drop table note_header cascade;
 
 drop table note_detail cascade;
 
-drop type note_types cascade;
-
 drop type genders cascade;

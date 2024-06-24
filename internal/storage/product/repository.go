@@ -37,7 +37,7 @@ func (db *repository) AddProduct(product products.Product) error {
 func (db *repository) GetProductsWithValueInName(value string) ([]*products.Product, error) {
 	const op = "storage.Product.GetProductsWithValueInName"
 
-	query := "SELECT * FROM products WHERE product_name LIKE $1"
+	query := "SELECT * FROM products WHERE product_name ILIKE '%' || $1 || '%'"
 	rows, err := db.DB.Query(query, value)
 	if err != nil {
 		return nil, fmt.Errorf("%s: failed get products which contains value: %w", op, err)

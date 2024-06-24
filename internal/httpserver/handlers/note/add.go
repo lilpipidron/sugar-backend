@@ -43,7 +43,6 @@ func NewNoteSaver(logger *log.Logger, noteSaver NoteSaver) http.HandlerFunc {
 
 		note := notes.Note{
 			NoteID:     noteAdd.NoteID,
-			NoteType:   noteAdd.NoteType,
 			DateTime:   noteAdd.DateTime,
 			SugarLevel: noteAdd.SugarLevel,
 		}

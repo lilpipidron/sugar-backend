@@ -28,9 +28,9 @@ func NewNoteRepository(db *sql.DB) *repository {
 func (db *repository) AddNote(note notes.Note, userID int64) error {
 	const op = "storage.note.AddNote"
 
-	query := "INSERT INTO note_header (note_type, create_date, sugar_level) VALUES ($1, $2, $3) RETURNING note_id"
+	query := "INSERT INTO note_header (create_date, sugar_level) VALUES ($1, $2) RETURNING note_id"
 	var noteID int64
-	err := db.DB.QueryRow(query, note.NoteType, note.DateTime, note.SugarLevel).Scan(&noteID)
+	err := db.DB.QueryRow(query, note.DateTime, note.SugarLevel).Scan(&noteID)
 	if err != nil {
 		return fmt.Errorf("%s: failed add note in note_header: %w", op, err)
 	}
@@ -81,7 +81,7 @@ func (db *repository) GetAllNotes(userID int64) ([]*notes.Note, error) {
 
 		n := &notes.Note{}
 		row.Next()
-		err = row.Scan(&n.NoteID, &n.NoteType, &n.DateTime, &n.SugarLevel)
+		err = row.Scan(&n.NoteID, &n.DateTime, &n.SugarLevel)
 		if err != nil {
 			return nil, fmt.Errorf("%s: failed scan note's row (note header): %w", op, err)
 		}
@@ -175,7 +175,7 @@ func (db *repository) GetNotesByDate(userID int64, dateTime time.Time) ([]*notes
 		}(row)
 
 		n := &notes.Note{}
-		err = row.Scan(&n.NoteID, &n.NoteType, &n.DateTime, &n.SugarLevel)
+		err = row.Scan(&n.NoteID, &n.DateTime, &n.SugarLevel)
 		if err != nil {
 			return nil, fmt.Errorf("%s: failed scan note's row (note header): %w", op, err)
 		}

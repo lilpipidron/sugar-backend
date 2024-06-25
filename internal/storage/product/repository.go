@@ -11,7 +11,7 @@ import (
 type Repository interface {
 	AddProduct(product products.Product) error
 	GetProductsWithValueInName(value string) ([]*products.Product, error)
-	GetCarbsAmount(name string) (int, error)
+	GetBreadUnitAmount(name string) (int, error)
 }
 
 type repository struct {
@@ -26,7 +26,7 @@ func (db *repository) AddProduct(product products.Product) error {
 	const op = "storage.product.AddProduct"
 
 	query := "INSERT INTO products (product_name, carbs) VALUES ($1, $2)"
-	_, err := db.DB.Exec(query, product.Name, product.Carbs)
+	_, err := db.DB.Exec(query, product.Name, product.BreadUnits)
 	if err != nil {
 		return fmt.Errorf("%s: failed add product: %w", op, err)
 	}
@@ -54,7 +54,7 @@ func (db *repository) GetProductsWithValueInName(value string) ([]*products.Prod
 
 	for rows.Next() {
 		p := &products.Product{}
-		err = rows.Scan(&p.ProductID, &p.Name, &p.Carbs)
+		err = rows.Scan(&p.ProductID, &p.Name, &p.BreadUnits)
 		if err != nil {
 			return nil, fmt.Errorf("%s: failed scan product's rows: %w", op, err)
 		}
@@ -84,7 +84,7 @@ func (db *repository) GetAllProducts() ([]*products.Product, error) {
 
 	for rows.Next() {
 		p := &products.Product{}
-		err = rows.Scan(&p.ProductID, &p.Name, &p.Carbs)
+		err = rows.Scan(&p.ProductID, &p.Name, &p.BreadUnits)
 		if err != nil {
 			return nil, fmt.Errorf("%s: failed scan product's rows: %w", op, err)
 		}
@@ -94,8 +94,8 @@ func (db *repository) GetAllProducts() ([]*products.Product, error) {
 	return product, nil
 }
 
-func (db *repository) GetCarbsAmount(name string) (int, error) {
-	const op = "storage.product.GetCarbsAmount"
+func (db *repository) GetBreadUnitAmount(name string) (int, error) {
+	const op = "storage.product.GetBreadUnitAmount"
 
 	query := "SELECT carbs FROM products WHERE product_name = $1"
 	row, err := db.DB.Query(query, name)

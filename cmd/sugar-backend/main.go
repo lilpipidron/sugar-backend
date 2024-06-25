@@ -98,7 +98,7 @@ func main() {
 
 	router.Get("/product", product.NewProductsGetter(log, productRepository))
 	router.Get("/product/all", product.NewAllProductsGetter(log, productRepository))
-	router.Get("/product/carbs", product.NewCarbsAmountGetter(log, productRepository))
+	router.Get("/product/breadUnits", product.NewBreadUnitsGetter(log, productRepository))
 	router.Post("/product", product.NewProductSaver(log, productRepository))
 
 	router.Get("/note", note.NewNoteGetter(log, noteRepository))

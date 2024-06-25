@@ -26,8 +26,8 @@ create table user_info
 create table products
 (
     product_id   bigint primary key generated always as identity,
-    product_name text   not null,
-    carbs        bigint not null
+    product_name text   not null unique,
+    bread_unit        bigint not null
 );
 
 create table note_header

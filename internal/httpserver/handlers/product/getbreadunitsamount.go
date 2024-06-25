@@ -11,26 +11,26 @@ import (
 	"net/http"
 )
 
-type CarbsAmountGetter interface {
-	GetCarbsAmount(name string) (int, error)
+type BreadUnitsGetter interface {
+	GetBreadUnitAmount(name string) (int, error)
 }
 
-func NewCarbsAmountGetter(logger *log.Logger, carbsAmountGetter CarbsAmountGetter) http.HandlerFunc {
+func NewBreadUnitsGetter(logger *log.Logger, carbsAmountGetter BreadUnitsGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.product.getcarbsamount.NewCarbsAmountGetter"
+		const op = "handlers.product.getbreadunitsamount.NewBreadUnitsGetter"
 
 		logger = log.With(
 			"op: "+op,
 			"request_id"+middleware.GetReqID(r.Context()),
 		)
 
-		getCarbsAmount := &request.GetCarbsAmount{
+		getBreadUnits := &request.GetBreadsUnit{
 			Name: r.URL.Query().Get("name"),
 		}
 
-		log.Info("decoded query parameters", getCarbsAmount)
+		log.Info("decoded query parameters", getBreadUnits)
 
-		if err := validator.New().Struct(getCarbsAmount); err != nil {
+		if err := validator.New().Struct(getBreadUnits); err != nil {
 			validateErr := err.(validator.ValidationErrors)
 
 			log.Error("invalid request", err)
@@ -40,16 +40,16 @@ func NewCarbsAmountGetter(logger *log.Logger, carbsAmountGetter CarbsAmountGette
 			return
 		}
 
-		carbs, err := carbsAmountGetter.GetCarbsAmount(getCarbsAmount.Name)
+		breadUnits, err := carbsAmountGetter.GetBreadUnitAmount(getBreadUnits.Name)
 		if err != nil {
 			log.Error(err)
 
-			render.JSON(w, r, resp.Error("failed to get carbs amount"))
+			render.JSON(w, r, resp.Error("failed to get bread units"))
 
 			return
 		}
 
-		log.Info("successfully get carbs amount")
-		response.ResponseOKWithData(w, r, carbs)
+		log.Info("successfully get bread units")
+		response.ResponseOKWithData(w, r, breadUnits)
 	}
 }

@@ -123,7 +123,7 @@ func (db *repository) GetAllNotes(userID int64) ([]*notes.Note, error) {
 			}(pRow)
 
 			p := &products.Product{}
-			err = pRow.Scan(&p.ProductID, &p.Name, &p.Carbs)
+			err = pRow.Scan(&p.ProductID, &p.Name, &p.BreadUnits)
 			if err != nil {
 				return nil, fmt.Errorf("%s: failed scan product's row (note detail): %w", op, err)
 			}
@@ -217,7 +217,7 @@ func (db *repository) GetNotesByDate(userID int64, dateTime time.Time) ([]*notes
 			}(pRow)
 
 			p := &products.Product{}
-			err = pRow.Scan(&p.ProductID, &p.Name, &p.Carbs)
+			err = pRow.Scan(&p.ProductID, &p.Name, &p.BreadUnits)
 			if err != nil {
 				return nil, fmt.Errorf("%s: failed scan product's row (note detail): %w", op, err)
 			}

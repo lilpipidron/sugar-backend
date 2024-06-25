@@ -42,9 +42,9 @@ func NewProductSaver(logger *log.Logger, productSaver ProductSaver) http.Handler
 		}
 
 		product := products.Product{
-			ProductID: 0,
-			Name:      productAdd.Name,
-			Carbs:     productAdd.Carbs,
+			ProductID:  0,
+			Name:       productAdd.Name,
+			BreadUnits: productAdd.BreadUnits,
 		}
 
 		err := productSaver.AddProduct(product)

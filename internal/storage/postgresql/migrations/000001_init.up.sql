@@ -49,3 +49,4 @@ create table note_detail
     product_id     bigint not null references products (product_id),
     product_amount bigint not null
 );
+

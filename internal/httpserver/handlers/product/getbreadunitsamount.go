@@ -12,7 +12,7 @@ import (
 )
 
 type BreadUnitsGetter interface {
-	GetBreadUnitAmount(name string) (int, error)
+	GetBreadUnitAmount(name string) (float64, error)
 }
 
 func NewBreadUnitsGetter(logger *log.Logger, carbsAmountGetter BreadUnitsGetter) http.HandlerFunc {

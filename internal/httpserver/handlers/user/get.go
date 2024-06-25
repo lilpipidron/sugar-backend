@@ -5,6 +5,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator/v10"
+	"github.com/lilpipidron/sugar-backend/internal/crypt"
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/request"
 	"github.com/lilpipidron/sugar-backend/internal/httpserver/response"
 	resp "github.com/lilpipidron/sugar-backend/internal/lib/api/response"
@@ -27,6 +28,16 @@ func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
 
 		login := r.URL.Query().Get("login")
 		password := r.URL.Query().Get("password")
+
+		password, err := crypt.HashPassword(password)
+
+		if err != nil {
+			log.Error("failed to hash password", "error", err)
+
+			render.Status(r, http.StatusInternalServerError)
+
+			render.JSON(w, r, resp.Error(err.Error()))
+		}
 
 		getUser := request.GetUser{
 			Login:    login,

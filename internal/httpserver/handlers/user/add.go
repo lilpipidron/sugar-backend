@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/lilpipidron/sugar-backend/internal/crypt"
 	"net/http"
 
 	"github.com/charmbracelet/log"
@@ -45,6 +46,17 @@ func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 			return
 		}
 
+		var err error = nil
+		userAdd.Password, err = crypt.HashPassword(userAdd.Password)
+
+		if err != nil {
+			log.Error("failed to hash password", "error", err)
+
+			render.Status(r, http.StatusInternalServerError)
+
+			render.JSON(w, r, resp.Error(err.Error()))
+		}
+
 		userInfo := users.UserInfo{
 			Name:              userAdd.Name,
 			Birthday:          userAdd.Birthday,
@@ -61,7 +73,7 @@ func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 			UserInfo: userInfo,
 		}
 
-		err := userSaver.AddNewUser(user, userAdd.Password)
+		err = userSaver.AddNewUser(user, userAdd.Password)
 		if err != nil {
 			log.Error(err)
 

@@ -11,7 +11,7 @@ import (
 type Repository interface {
 	AddProduct(product products.Product) error
 	GetProductsWithValueInName(value string) ([]*products.Product, error)
-	GetBreadUnitAmount(name string) (int, error)
+	GetBreadUnitAmount(name string) (float64, error)
 }
 
 type repository struct {
@@ -94,13 +94,13 @@ func (db *repository) GetAllProducts() ([]*products.Product, error) {
 	return product, nil
 }
 
-func (db *repository) GetBreadUnitAmount(name string) (int, error) {
+func (db *repository) GetBreadUnitAmount(name string) (float64, error) {
 	const op = "storage.product.GetBreadUnitAmount"
 
 	query := "SELECT bread_units FROM products WHERE product_name = $1"
 	row, err := db.DB.Query(query, name)
 	if err != nil {
-		return -1, fmt.Errorf("%s: failed get carbs amount: %w", op, err)
+		return -1, fmt.Errorf("%s: failed get bread units: %w", op, err)
 	}
 
 	defer func(rows *sql.Rows) {
@@ -110,12 +110,12 @@ func (db *repository) GetBreadUnitAmount(name string) (int, error) {
 		}
 	}(row)
 
-	var carbs int
+	var breadUnits float64
 	row.Next()
-	err = row.Scan(&carbs)
+	err = row.Scan(&breadUnits)
 	if err != nil {
 		return -1, fmt.Errorf("%s: failed scan product's row: %w", op, err)
 	}
 
-	return carbs, nil
+	return breadUnits, nil
 }

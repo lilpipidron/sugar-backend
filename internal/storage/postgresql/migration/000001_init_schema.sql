@@ -27,7 +27,7 @@ create table products
 (
     product_id   bigint primary key generated always as identity,
     product_name text   not null unique,
-    bread_units        bigint not null
+    bread_units        float not null
 );
 
 create table note_header

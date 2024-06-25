@@ -34,6 +34,8 @@ func NewNoteSaver(logger *log.Logger, noteSaver NoteSaver) http.HandlerFunc {
 		if err := validator.New().Struct(noteAdd); err != nil {
 			validateErr := err.(validator.ValidationErrors)
 
+			render.Status(r, http.StatusBadRequest)
+
 			log.Error("invalid request", err)
 
 			render.JSON(w, r, resp.Error(validateErr.Error()))
@@ -50,6 +52,8 @@ func NewNoteSaver(logger *log.Logger, noteSaver NoteSaver) http.HandlerFunc {
 		err := noteSaver.AddNote(note, noteAdd.UserID)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to add note"))
 

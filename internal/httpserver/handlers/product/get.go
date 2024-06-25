@@ -36,6 +36,8 @@ func NewProductsGetter(logger *log.Logger, productsGetter ProductsGetter) http.H
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -44,6 +46,8 @@ func NewProductsGetter(logger *log.Logger, productsGetter ProductsGetter) http.H
 		productsArr, err := productsGetter.GetProductsWithValueInName(productsGet.Name)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to get product"))
 

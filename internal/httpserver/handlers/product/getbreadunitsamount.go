@@ -35,6 +35,8 @@ func NewBreadUnitsGetter(logger *log.Logger, carbsAmountGetter BreadUnitsGetter)
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -43,6 +45,8 @@ func NewBreadUnitsGetter(logger *log.Logger, carbsAmountGetter BreadUnitsGetter)
 		breadUnits, err := carbsAmountGetter.GetBreadUnitAmount(getBreadUnits.Name)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to get bread units"))
 

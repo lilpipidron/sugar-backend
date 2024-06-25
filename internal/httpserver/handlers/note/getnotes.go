@@ -40,6 +40,8 @@ func NewNoteGetter(logger *log.Logger, noteGetter NoteGetter) http.HandlerFunc {
 		if err := validator.New().Struct(noteGet); err != nil {
 			validateErr := err.(validator.ValidationErrors)
 
+			render.Status(r, http.StatusBadRequest)
+
 			log.Error("invalid request", err)
 
 			render.JSON(w, r, resp.Error(validateErr.Error()))

@@ -45,6 +45,8 @@ func NewNameChanger(logger *log.Logger, nameChanger NameChanger) http.HandlerFun
 		if err != nil {
 			log.Error(err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error("failed to change name"))
 
 			return

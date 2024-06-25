@@ -38,6 +38,8 @@ func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -62,6 +64,8 @@ func NewUserSaver(logger *log.Logger, userSaver UserSaver) http.HandlerFunc {
 		err := userSaver.AddNewUser(user, userAdd.Password)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to add user"))
 

@@ -27,6 +27,8 @@ func NewAllProductsGetter(logger *log.Logger, productsGetter AllProductsGetter) 
 		if err != nil {
 			log.Error(err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error("failed to get product"))
 
 			return

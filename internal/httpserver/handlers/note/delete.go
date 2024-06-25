@@ -35,6 +35,8 @@ func NewNoteDelete(logger *log.Logger, noteDeleter NoteDeleter) http.HandlerFunc
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -43,6 +45,8 @@ func NewNoteDelete(logger *log.Logger, noteDeleter NoteDeleter) http.HandlerFunc
 		err := noteDeleter.DeleteNote(noteDelete.NoteID)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to delete note"))
 

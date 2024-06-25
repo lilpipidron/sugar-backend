@@ -34,6 +34,8 @@ func NewProductSaver(logger *log.Logger, productSaver ProductSaver) http.Handler
 		if err := validator.New().Struct(productAdd); err != nil {
 			validateErr := err.(validator.ValidationErrors)
 
+			render.Status(r, http.StatusBadRequest)
+
 			log.Error("invalid request", err)
 
 			render.JSON(w, r, resp.Error(validateErr.Error()))
@@ -50,6 +52,8 @@ func NewProductSaver(logger *log.Logger, productSaver ProductSaver) http.Handler
 		err := productSaver.AddProduct(product)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to add product"))
 

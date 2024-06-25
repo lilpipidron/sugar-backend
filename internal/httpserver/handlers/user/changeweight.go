@@ -36,6 +36,8 @@ func NewWeightChanger(logger *log.Logger, weightChanger WeightChanger) http.Hand
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -44,6 +46,8 @@ func NewWeightChanger(logger *log.Logger, weightChanger WeightChanger) http.Hand
 		err := weightChanger.ChangeWeight(changeWeight.ID, changeWeight.NewWeight)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to change weight"))
 

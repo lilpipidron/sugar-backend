@@ -46,6 +46,8 @@ func NewBirthdayChanger(logger *log.Logger, birthdayChanger BirthdayChanger) htt
 		if err != nil {
 			log.Error(err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error("failed to change birthday"))
 
 			return

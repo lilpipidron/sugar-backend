@@ -39,6 +39,8 @@ func NewNoteGetterByDate(logger *log.Logger, noteGetter NoteGetterByDate) http.H
 		if err := validator.New().Struct(noteGetByDate); err != nil {
 			validateErr := err.(validator.ValidationErrors)
 
+			render.Status(r, http.StatusBadRequest)
+
 			log.Error("invalid request", err)
 
 			render.JSON(w, r, resp.Error(validateErr.Error()))
@@ -49,6 +51,8 @@ func NewNoteGetterByDate(logger *log.Logger, noteGetter NoteGetterByDate) http.H
 		allNotes, err := noteGetter.GetNotesByDate(noteGetByDate.UserID, noteGetByDate.DateTime)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to get notes by date"))
 

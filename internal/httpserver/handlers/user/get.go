@@ -40,6 +40,8 @@ func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -48,6 +50,8 @@ func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
 		user, err := userGetter.FindUser(getUser.Login, getUser.Password)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to get user"))
 

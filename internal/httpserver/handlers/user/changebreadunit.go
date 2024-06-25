@@ -36,6 +36,8 @@ func NewBreadUnitChanger(logger *log.Logger, breadUnitChanger BreadUnitChanger) 
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -44,6 +46,8 @@ func NewBreadUnitChanger(logger *log.Logger, breadUnitChanger BreadUnitChanger) 
 		err := breadUnitChanger.ChangeBreadUnit(changeBreadUnit.ID, changeBreadUnit.NewBreadUnit)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to change bread unit"))
 

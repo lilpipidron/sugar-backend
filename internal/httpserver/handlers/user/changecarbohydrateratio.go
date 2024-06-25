@@ -36,6 +36,8 @@ func NewCarbohydrateRatioChanger(logger *log.Logger, carbohydrateRatioChanger Ca
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -44,6 +46,8 @@ func NewCarbohydrateRatioChanger(logger *log.Logger, carbohydrateRatioChanger Ca
 		err := carbohydrateRatioChanger.ChangeCarbohydrateRatio(changeCarbohydrateRatio.ID, changeCarbohydrateRatio.NewCarbohydrateRatio)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to change carbohydrate ratio"))
 

@@ -36,6 +36,8 @@ func NewUserDelete(logger *log.Logger, userDeleter UserDeleter) http.HandlerFunc
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -44,6 +46,8 @@ func NewUserDelete(logger *log.Logger, userDeleter UserDeleter) http.HandlerFunc
 		err := userDeleter.DeleteUser(userDelete.Id)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to delete user"))
 

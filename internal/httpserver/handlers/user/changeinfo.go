@@ -47,6 +47,8 @@ func NewUserInfoChanger(logger *log.Logger, allInfoChanger AllInfoChanger) http.
 		if err != nil {
 			log.Error(err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error("failed to change birthday"))
 
 			return

@@ -37,6 +37,8 @@ func NewGenderChanger(logger *log.Logger, genderChanger GenderChanger) http.Hand
 
 			log.Error("invalid request", err)
 
+			render.Status(r, http.StatusBadRequest)
+
 			render.JSON(w, r, resp.Error(validateErr.Error()))
 
 			return
@@ -45,6 +47,8 @@ func NewGenderChanger(logger *log.Logger, genderChanger GenderChanger) http.Hand
 		err := genderChanger.ChangeGender(changeGender.ID, changeGender.NewGender)
 		if err != nil {
 			log.Error(err)
+
+			render.Status(r, http.StatusBadRequest)
 
 			render.JSON(w, r, resp.Error("failed to change gender"))
 		}

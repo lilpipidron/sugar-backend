@@ -29,15 +29,7 @@ func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
 		login := r.URL.Query().Get("login")
 		password := r.URL.Query().Get("password")
 
-		password, err := crypt.HashPassword(password)
-
-		if err != nil {
-			log.Error("failed to hash password", "error", err)
-
-			render.Status(r, http.StatusInternalServerError)
-
-			render.JSON(w, r, resp.Error(err.Error()))
-		}
+		password = crypt.HashPassword(password)
 
 		getUser := request.GetUser{
 			Login:    login,

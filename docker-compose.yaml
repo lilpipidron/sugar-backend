@@ -3,16 +3,20 @@ version: "3.9"
 services:
   sugar-backend:
     build: ./
-    command: ./sugar-backend
+    command: ./wait-for-postgres.sh sugar-db ./main
     ports:
       - "8080:8080"
     depends_on:
       - sugar-db
     environment:
+      - DB_HOST=sugar-db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=sugar-db
       - POSTGRES_PASSWORD=postgres
 
   sugar-db:
-    restart: unless-stopped
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -20,3 +24,4 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_DB=sugar-db
+    restart: unless-stopped

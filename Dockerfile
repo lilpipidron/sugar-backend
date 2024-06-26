@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . /app
 
+COPY wait-for-postgres.sh /app
+
 RUN apt-get update
 RUN apt-get -y install postgresql-client
 
@@ -16,3 +18,4 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/sugar-
 EXPOSE 8080
 
 CMD ["./main"]
+

@@ -53,9 +53,11 @@ func NewUserGetter(logger *log.Logger, userGetter UserGetter) http.HandlerFunc {
 		user, err := userGetter.FindUser(getUser.Login, getUser.Password)
 		if err != nil {
 			log.Error(err)
-
-			render.Status(r, http.StatusBadRequest)
-
+			if err.Error() == "user not found" {
+				render.Status(r, http.StatusUnauthorized)
+			} else {
+				render.Status(r, http.StatusInternalServerError)
+			}
 			render.JSON(w, r, resp.Error("failed to get user"))
 
 			return

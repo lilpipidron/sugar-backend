@@ -6,6 +6,7 @@ import (
 	"github.com/rs/cors"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/charmbracelet/log"
 	"github.com/go-chi/chi/v5"
@@ -59,11 +60,20 @@ func main() {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName)
-	storage, err := postgresql.New(psqlInfo, cfg.DBName)
-	if err != nil {
-		log.Error("failed to init storage", err)
-		os.Exit(1)
+
+	var storage *postgresql.Storage
+	for {
+		storage, err = postgresql.New(psqlInfo, cfg.DBName)
+		if err != nil {
+			log.Error("failed to init storage", err)
+			time.Sleep(100 * time.Millisecond)
+			log.Info("retrying connection to database")
+		} else {
+			break
+		}
 	}
+
+	log.Info("successfully connected to database")
 
 	userRepository := ur.NewUserRepository(storage.DB)
 	productRepository := pr.NewProductRepository(storage.DB)

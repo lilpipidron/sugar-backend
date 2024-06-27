@@ -76,7 +76,7 @@ func (db *repository) FindUser(login, password string) (*users.User, error) {
 	row.Next()
 	err = row.Scan(&u.UserID, &u.Login, &u.Password)
 	if err != nil {
-		return nil, fmt.Errorf("%s: failed scan row: %w", op, err)
+		return nil, fmt.Errorf("%s", "user not found")
 	}
 
 	query = "SELECT * FROM user_info where user_id = $1"

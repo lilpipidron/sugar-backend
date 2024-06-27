@@ -25,7 +25,7 @@ func NewProductRepository(db *sql.DB) *repository {
 func (db *repository) AddProduct(product products.Product) error {
 	const op = "storage.product.AddProduct"
 
-	query := "INSERT INTO products (product_name, carbs) VALUES ($1, $2)"
+	query := "INSERT INTO products (product_name, bread_units) VALUES ($1, $2)"
 	_, err := db.DB.Exec(query, product.Name, product.BreadUnits)
 	if err != nil {
 		return fmt.Errorf("%s: failed add product: %w", op, err)

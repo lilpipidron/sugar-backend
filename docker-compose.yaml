@@ -3,7 +3,7 @@ version: "3.9"
 services:
   sugar-backend:
     build: ./
-    command: ./app/wait-for-postgres.sh sugar-db ./main
+    command: ./main
     ports:
       - "8080:8080"
     depends_on:

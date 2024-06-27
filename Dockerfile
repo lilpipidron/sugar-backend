@@ -4,12 +4,9 @@ WORKDIR /app
 
 COPY . /app
 
-COPY wait-for-postgres.sh /app
 
 RUN apt-get update
 RUN apt-get -y install postgresql-client
-
-RUN chmod +x wait-for-postgres.sh
 
 RUN go mod download
 

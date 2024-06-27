@@ -42,11 +42,3 @@ create table note_user
     note_id bigint not null references note_header (note_id),
     user_id bigint not null references users (user_id)
 );
-
-create table note_detail
-(
-    note_id        bigint not null references note_header (note_id),
-    product_id     bigint not null references products (product_id),
-    product_amount bigint not null
-);
-

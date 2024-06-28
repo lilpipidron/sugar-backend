@@ -44,8 +44,8 @@ create table note_user
 );
 
 create table note_text (
-    note_id not null references note_user (note_id),
-    text string
+    note_id bigint not null references note_user (note_id),
+    text varchar
 );
 
 INSERT INTO products (product_name, bread_units) VALUES

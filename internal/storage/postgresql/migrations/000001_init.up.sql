@@ -39,7 +39,7 @@ create table note_header
 
 create table note_user
 (
-    note_id bigint not null references note_header (note_id),
+    note_id bigint unique not null references note_header (note_id),
     user_id bigint not null references users (user_id)
 );
 

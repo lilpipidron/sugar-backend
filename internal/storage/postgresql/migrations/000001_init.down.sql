@@ -4,6 +4,8 @@ drop table user_info cascade;
 
 drop table products cascade;
 
+drop table note_text cascade;
+
 drop table note_user cascade;
 
 drop table note_header cascade;

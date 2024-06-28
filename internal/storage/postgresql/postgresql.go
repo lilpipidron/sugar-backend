@@ -18,6 +18,13 @@ func New(psqlInfo, dbname string) (*Storage, error) {
 	const errFunc = "storage.postgresql.NewStorage"
 
 	db, err := sql.Open("postgres", psqlInfo)
+
+	defer func() {
+		if err != nil {
+			db.Close()
+		}
+	}()
+
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", errFunc, err)
 	}

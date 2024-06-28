@@ -43,6 +43,11 @@ create table note_user
     user_id bigint not null references users (user_id)
 );
 
+create table note_text (
+    note_id not null references note_user (note_id),
+    text string
+);
+
 INSERT INTO products (product_name, bread_units) VALUES
                                                     ('Белый хлеб', 5),
                                                     ('Черный хлеб', 4),
